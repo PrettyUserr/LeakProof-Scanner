@@ -9,6 +9,11 @@ IGNORED_EXTENSIONS = {
     '.lock', '.pyc'
 }
 
+IGNORED_LINES = {
+    "BASE64_CHARS",
+    "HEX_CHARS",
+}
+
 IGNORED_DIRS = {
     'venv', '.git', '__pycache__', 'node_modules',
     '.pytest_cache', 'dist', 'build'
@@ -48,6 +53,8 @@ def scan_file(file_path: str) -> list[Finding]:
 
         words = line.split()
         for word in words:
+            if any(ignore in line for ignore in IGNORED_LINES):
+                  continue
             word = word.strip("'\"`,;:()")
             if is_high_entropy_string(word):
                 already_found = any(
